@@ -2,4 +2,8 @@
     margin: 8px;
     display: flex;
     flex-direction: column;
+    align-self: stretch;
+}
+.column-header{
+    height: 50px;
 }

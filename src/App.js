@@ -8,6 +8,9 @@ const Task = lazy(() => import("./pages/Task"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 
+
+
+
 function App() {
   return (
     <BrowserRouter>

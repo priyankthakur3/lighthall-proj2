@@ -1,0 +1,27 @@
+.header-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    height: 80px;
+    background-color: #ffd402;
+}
+
+.option-container{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    height: 50px;
+    gap : 20px;
+}
+.task-popup-container{
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    gap: 30px;
+}
+
+/* List view */
+.list-container{
+    height: 800px;
+}

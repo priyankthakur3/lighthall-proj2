@@ -79,30 +79,6 @@ const Board = ({
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        {/* <Droppable
-          droppableId="board"
-          type="COLUMN"
-          direction="horizontal"
-          ignoreContainerClipping={Boolean(containerHeight)}
-          isCombineEnabled={isCombineEnabled}
-        > */}
-          {/* {(provided) => (
-            <Box className="board-container" ref={provided.innerRef} {...provided.droppableProps}>
-              {ordered.map((key, index) => (
-                <Column
-                  key={key}
-                  index={index}
-                  title={key}
-                  quotes={columns[key]}
-                  isScrollable={withScrollableColumns}
-                  isCombineEnabled={isCombineEnabled}
-                  useClone={useClone}
-                />
-              ))}
-              {provided.placeholder}
-            </Box>
-          )} */}
-        {/* </Droppable> */}
         <Box className="board-container" >
               {ordered.map((key, index) => (
                 <Column

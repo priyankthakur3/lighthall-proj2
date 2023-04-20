@@ -29,11 +29,12 @@ const Wrapper = styled.div`
   width: 250px;
 `;
 
-const scrollContainerHeight = 250;
+const scrollContainerHeight = 350;
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
-  min-height: ${scrollContainerHeight}px;
+  /*min-height: ${scrollContainerHeight}px;*/
+  height : 100%;
   /*
     not relying on the items for a margin-bottom
     as it will collapse when the list is empty
@@ -48,7 +49,9 @@ const ScrollContainer = styled.div`
 `;
 
 /* stylelint-disable block-no-empty */
-const Container = styled.div``;
+const Container = styled.div`
+  height : 100%;
+`;
 /* stylelint-enable */
 
 const InnerQuoteList = React.memo(function InnerQuoteList(props) {
