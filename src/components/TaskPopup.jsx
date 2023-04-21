@@ -107,7 +107,7 @@ export default function TaskPopup({ isOpen, popupType, onClose, onCreate, onUpda
                     </Select>
                 </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker label="Due Data" value={taskDate} onChange={(value) => { setTaskDate(value) }} />
+                    <DatePicker label="Due Date" value={taskDate} minDate={dayjs(new Date())} onChange={(value) => { setTaskDate(value) }} />
                 </LocalizationProvider>
 
             </DialogContent>

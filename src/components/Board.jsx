@@ -100,7 +100,7 @@ const Board = ({
     
     //update existing
     taskList = taskList.map((task)=>{
-      if( dataSet[task.id] ){
+      if( dataSet[task.id] && dataSet[task.id].taskStatus===status){
         return dataSet[task.id];
       }else{
         return null;
@@ -132,7 +132,7 @@ const Board = ({
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Box className="board-container" >
+        <Box className="board-container">
               {ordered.map((key, index) => (
                 <Column
                   key={key}
