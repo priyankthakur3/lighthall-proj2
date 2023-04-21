@@ -1,20 +1,9 @@
 import React from 'react';
 import styled from '@xstyled/styled-components';
-
-// const getBackgroundColor = (isDragging, isGroupedOver, authorColors) => {
-//   if (isDragging) {
-//     return authorColors.soft;
-//   }
-
-//   if (isGroupedOver) {
-//     return '#EBECF0';
-//   }
-
-//   return '#FFFFFF';
-// };
-
-// const getBorderColor = (isDragging, authorColors) =>
-//   isDragging ? authorColors.hard : 'transparent';
+import { Typography,Stack,IconButton } from '@mui/material';
+import dayjs from 'dayjs';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const imageSize = 40;
 
@@ -39,14 +28,16 @@ const CloneBadge = styled.div`
 const Container = styled.a`
   border-radius: 5px;
   border: 2px solid transparent;
-  border-color: red;
-  background-color: red
+  
+  background-color: white;
+  border : 1px solid black;
   box-shadow: ${({ isDragging }) => (isDragging ? `2px 2px 1px #A5ADBA` : 'none')};
   box-sizing: border-box;
   padding: 8px;
   min-height: ${imageSize}px;
   margin-bottom: 8px;
   user-select: none;
+  width : 100%;
 
   /* anchor overrides */
   color: #091e42;
@@ -124,6 +115,13 @@ function getStyle(provided, style) {
   };
 }
 
+let statusField = {
+  todo : 'To Do',
+  progress : 'Progress',
+  waitlist : 'Waitlist',
+  completed : 'Completed'
+}
+
 // Previously this extended React.Component
 // That was a good thing, because using React.PureComponent can hide
 // issues with the selectors. However, moving it over does can considerable
@@ -132,7 +130,7 @@ function getStyle(provided, style) {
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
 function PostItem(props) {
-  const { quote, isDragging, isGroupedOver, provided, style, isClone, index } = props;
+  const { task, isDragging, isGroupedOver, provided, style, isClone, index,onDelete, onUpdate } = props;
 
   return (
     <Container
@@ -144,7 +142,7 @@ function PostItem(props) {
       {...provided.dragHandleProps}
       style={getStyle(provided, style)}
       data-is-dragging={isDragging}
-      data-testid={quote.id}
+      data-testid={task.id}
       data-index={index}
     >
       {isClone ? <CloneBadge>Clone</CloneBadge> : null}
@@ -157,9 +155,55 @@ function PostItem(props) {
             {quote.id}
           </QuoteId>
         </Footer> */}
-        <div>
-            {quote.title}
-        </div>
+        <Typography sx={{
+          fontSize: "15px",
+          fontWeight: "bold"
+        }}>
+          {task.taskTitle}
+        </Typography>
+
+        <Stack direction="row" spacing={2} flexWrap="wrap">
+          <Typography align='left' sx={{
+            fontWeight : '600'
+          }}>
+            Description : 
+          </Typography>
+          <Typography align='left' flexWrap="wrap" sx={{
+            overflow: 'hidden', textOverflow: 'ellipsis', width:"100%"
+          }}>
+            {task.taskDesc}
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" spacing={2}>
+          <Typography align='left' sx={{
+            fontWeight : '600'
+          }}>
+            Status : 
+          </Typography>
+          <Typography align='left'>
+            {statusField[task.taskStatus]}
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" spacing={2}>
+          <Typography align='left' sx={{
+            fontWeight : '600'
+          }}>
+            Due Date : 
+          </Typography>
+          <Typography align='left'>
+            { dayjs(new Date(+task.taskDue*1000)).format('MM/DD/YYYY')}
+          </Typography>
+        </Stack>
+
+        <Stack direction="row"  justifyContent="flex-end" spacing={2}>
+            <IconButton variant="contained" size="small" onClick={()=>{onUpdate(task.id)}}><EditIcon /></IconButton>
+            <IconButton variant="contained" size="small" onClick={()=>{onDelete(task.id)}}><DeleteIcon /></IconButton>
+          </Stack>
+
+
+
       </Content>
     </Container>
   );

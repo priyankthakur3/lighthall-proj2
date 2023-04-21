@@ -3,6 +3,8 @@ import './App.css';
 import { Box, CircularProgress } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { lazy, Suspense } from "react";
+import UserProvider from './components/UserProvider';
+
 
 const Task = lazy(() => import("./pages/Task"));
 const Login = lazy(() => import("./pages/Login"));
@@ -13,7 +15,8 @@ const Register = lazy(() => import("./pages/Register"));
 
 function App() {
   return (
-    <BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
       <Suspense
         fallback={
           <Box className="display-center">
@@ -28,6 +31,8 @@ function App() {
         </Routes>
       </Suspense>
     </BrowserRouter>
+    </UserProvider>
+    
   );
 }
 

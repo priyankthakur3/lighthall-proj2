@@ -12,7 +12,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function TaskPopup({ isOpen, popupType, onClose, onCreate, onUpdate, taskData }) {
+export default function FilterPopup({ isOpen, onClose, onFilter, filterData}) {
 
     const [taskStatus, setTaskStatus] = useState('todo');
     const [taskTitle, setTaskTitle] = useState('');
@@ -77,8 +77,9 @@ export default function TaskPopup({ isOpen, popupType, onClose, onCreate, onUpda
 
     return (
         <Dialog open={isOpen} onClose={handleClose}>
-            <DialogTitle>{popupType === 'create' ? 'Create Task' : 'Update Task'}</DialogTitle>
+            <DialogTitle>Filter</DialogTitle>
             <DialogContent className="task-popup-container">
+                
                 <TextField
                     autoFocus
                     margin="dense"

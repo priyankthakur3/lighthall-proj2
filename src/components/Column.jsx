@@ -3,22 +3,13 @@ import '../styles/Column.css';
 import { Box, Typography } from "@mui/material";
 import PostList from "./PostList";
 
-
-// const Header = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   border-top-left-radius: ${borderRadius}px;
-//   border-top-right-radius: ${borderRadius}px;
-//   background-color: ${({ isDragging }) =>
-//     isDragging ? colors.G50 : colors.N30};
-//   transition: background-color 0.2s ease;
-//   &:hover {
-//     background-color: ${colors.G50};
-//   }
-// `;
-
 const Column = (props) => {
+    let columnHeader = {
+        todo : 'To Do',
+        progress : 'Progress',
+        waitlist : 'Waitlist',
+        completed : 'Completed'
+    }
     const title = props.title;
     const quotes = props.quotes;
     const index = props.index;
@@ -26,9 +17,11 @@ const Column = (props) => {
         <Box className="column-container" >
             <Box className="column-header">
                 <Typography sx={{
-                    textAlign : "center"
+                    textAlign : "center",
+                    fontWeight : "bold",
+                    fontSize : "18px"
                 }}>
-                    {title}
+                    {columnHeader[title]}
                 </Typography>
             </Box>
             <PostList
@@ -36,7 +29,9 @@ const Column = (props) => {
                 listType="QUOTE"
                 quotes={quotes}
                 internalScroll={props.isScrollable}
-                useClone={Boolean(props.useClone)}
+                className="post-list"
+                onDelete={props.onDelete}
+                onUpdate={props.onUpdate}
             />
         </Box>
     );

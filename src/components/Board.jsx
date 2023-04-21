@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Column from "./Column";
 import reorder, { reorderQuoteMap } from "../utils/reorder";
@@ -10,37 +10,38 @@ import '../styles/Board.css';
 
 
 const Board = ({
-  isCombineEnabled,
   initial,
-  useClone,
-  containerHeight,
-  withScrollableColumns
+  withScrollableColumns,
+  data,
+  onDelete,
+  onUpdate,
+  onTaskUpdateStatus
 }) => {
   const [columns, setColumns] = useState(initial);
 
-  const [ordered, setOrdered] = useState(Object.keys(initial));
+  const [ordered, setOrdered] = useState(['todo','progress','waitlist','completed']);
 
   const onDragEnd = (result) => {
-    if (result.combine) {
-      if (result.type === "COLUMN") {
-        const shallow = [...ordered];
-        shallow.splice(result.source.index, 1);
-        setOrdered(shallow);
-        return;
-      }
+    // if (result.combine) {
+    //   if (result.type === "COLUMN") {
+    //     const shallow = [...ordered];
+    //     shallow.splice(result.source.index, 1);
+    //     setOrdered(shallow);
+    //     return;
+    //   }
 
-      const column = columns[result.source.droppableId];
-      const withQuoteRemoved = [...column];
+    //   const column = columns[result.source.droppableId];
+    //   const withQuoteRemoved = [...column];
 
-      withQuoteRemoved.splice(result.source.index, 1);
+    //   withQuoteRemoved.splice(result.source.index, 1);
 
-      const orderedColumns = {
-        ...columns,
-        [result.source.droppableId]: withQuoteRemoved
-      };
-      setColumns(orderedColumns);
-      return;
-    }
+    //   const orderedColumns = {
+    //     ...columns,
+    //     [result.source.droppableId]: withQuoteRemoved
+    //   };
+    //   setColumns(orderedColumns);
+    //   return;
+    // }
 
     // dropped nowhere
     if (!result.destination) {
@@ -59,13 +60,13 @@ const Board = ({
     }
 
     // reordering column
-    if (result.type === "COLUMN") {
-      const reorderedorder = reorder(ordered, source.index, destination.index);
+    // if (result.type === "COLUMN") {
+    //   const reorderedorder = reorder(ordered, source.index, destination.index);
 
-      setOrdered(reorderedorder);
+    //   setOrdered(reorderedorder);
 
-      return;
-    }
+    //   return;
+    // }
 
     const data = reorderQuoteMap({
       quoteMap: columns,
@@ -74,7 +75,59 @@ const Board = ({
     });
 
     setColumns(data.quoteMap);
+
+    onTaskUpdateStatus({
+      taskID : result.draggableId,
+      taskStatus : destination.droppableId
+    })
   };
+
+
+  const updateTaskList = (taskList,data,status)=>{
+    const dataSet = {};
+    const listSet = new Set();
+
+    taskList.forEach(task => {
+      listSet.add(task.id);
+    });
+    let newList = [];
+    data.forEach(task => {
+      dataSet[task.id] = task;
+      if( !listSet.has(task.id) && task.taskStatus===status){
+        newList.push(task);
+      }
+    });
+    
+    //update existing
+    taskList = taskList.map((task)=>{
+      if( dataSet[task.id] ){
+        return dataSet[task.id];
+      }else{
+        return null;
+      }
+    });
+
+    taskList = taskList.filter((task)=>(task!==null));
+    taskList = [...taskList,...newList];
+    return taskList;
+  }
+
+  useEffect(()=>{
+    let toDoTask = updateTaskList([...columns.todo],data,'todo');
+    let progressTask = updateTaskList([...columns.progress],data,'progress');
+    let completedTask = updateTaskList([...columns.completed],data,'completed');
+    let waitlistTask = updateTaskList([...columns.waitlist],data,'waitlist');;
+
+    setColumns({
+      todo : toDoTask,
+      progress : progressTask,
+      completed : completedTask,
+      waitlist : waitlistTask,
+    });
+    setOrdered(['todo','progress','waitlist','completed']);
+  },[data]);
+
+  
 
   return (
     <>
@@ -87,7 +140,8 @@ const Board = ({
                   title={key}
                   quotes={columns[key]}
                   isScrollable={withScrollableColumns}
-                  useClone={useClone}
+                  onDelete={onDelete}
+                  onUpdate={onUpdate}
                 />
               ))}
             </Box>

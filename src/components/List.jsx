@@ -25,6 +25,7 @@ const List = ({
                 pageSizeOptions={[10,25,50]}
                 checkboxSelection={false}
                 disableRowSelectionOnClick
+                disableColumnMenu={true}
             />
         </Box>
     );

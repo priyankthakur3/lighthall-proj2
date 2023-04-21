@@ -5,6 +5,7 @@ import styled from '@xstyled/styled-components';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import PostItem from './PostItem';
 import { Typography } from '@mui/material';
+import '../styles/Layout.css';
 
 export const getBackgroundColor = (isDraggingOver, isDraggingFrom) => {
   if (isDraggingOver) {
@@ -26,10 +27,11 @@ const Wrapper = styled.div`
   padding-bottom: 0;
   transition: background-color 0.2s ease, opacity 0.1s ease;
   user-select: none;
-  width: 250px;
+  border-radius : 0px 0px 5px 5px;
+  height : 100%;
 `;
 
-const scrollContainerHeight = 350;
+const scrollContainerHeight = 500;
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
@@ -45,7 +47,8 @@ const DropZone = styled.div`
 const ScrollContainer = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: ${scrollContainerHeight}px;
+  / *max-height: ${scrollContainerHeight}px; */
+  height : 100%;
 `;
 
 /* stylelint-disable block-no-empty */
@@ -60,10 +63,12 @@ const InnerQuoteList = React.memo(function InnerQuoteList(props) {
       {(dragProvided, dragSnapshot) => (
         <PostItem
           key={quote.id}
-          quote={quote}
+          task={quote}
           isDragging={dragSnapshot.isDragging}
           isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
           provided={dragProvided}
+          onDelete={props.onDelete}
+          onUpdate={props.onUpdate}
         />
       )}
     </Draggable>
@@ -78,7 +83,7 @@ function InnerList(props) {
     <Container>
       {title}
       <DropZone ref={dropProvided.innerRef}>
-        <InnerQuoteList quotes={quotes} />
+        <InnerQuoteList quotes={quotes} onDelete={props.onDelete} onUpdate={props.onUpdate}/>
         {dropProvided.placeholder}
       </DropZone>
     </Container>
@@ -96,7 +101,8 @@ export default function PostList(props) {
     style,
     quotes,
     title,
-    useClone,
+    onDelete,
+    onUpdate
   } = props;
 
   return (
@@ -105,18 +111,17 @@ export default function PostList(props) {
       type={listType}
       ignoreContainerClipping={ignoreContainerClipping}
       isDropDisabled={isDropDisabled}
-      renderClone={
-        useClone
-          ? (provided, snapshot, descriptor) => (
-              <PostItem
-                quote={quotes[descriptor.source.index]}
-                provided={provided}
-                isDragging={snapshot.isDragging}
-                isClone
-              />
-            )
-          : null
-      }
+      sx={{
+        height : "900px"
+      }}
+      // renderClone={(provided, snapshot, descriptor) => (
+      //   <PostItem
+      //     quote={quotes[descriptor.source.index]}
+      //     provided={provided}
+      //     isDragging={snapshot.isDragging}
+      //     isClone
+      //   />)
+      // }
     >
       {(dropProvided, dropSnapshot) => (
         <Wrapper
@@ -125,10 +130,11 @@ export default function PostList(props) {
           isDropDisabled={isDropDisabled}
           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
+          
         >
           {internalScroll ? (
-            <ScrollContainer style={scrollContainerStyle}>
-              <InnerList quotes={quotes} title={title} dropProvided={dropProvided} />
+            <ScrollContainer style={scrollContainerStyle} className="scroll-container">
+              <InnerList quotes={quotes} title={title} dropProvided={dropProvided} onDelete={onDelete} onUpdate={onUpdate}/>
             </ScrollContainer>
           ) : (
             <InnerList quotes={quotes} title={title} dropProvided={dropProvided} />
