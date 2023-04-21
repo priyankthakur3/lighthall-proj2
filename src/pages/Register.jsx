@@ -8,9 +8,6 @@ import MuiAlert from '@mui/material/Alert';
 import { backendCall } from "../utils/network";
 
 
-const bcrypt = require('bcryptjs');
-var salt = bcrypt.genSaltSync(10);
-
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
