@@ -38,6 +38,9 @@ export default function Task() {
 
 
   const handleViewChange = (event, newViewType) => {
+    if( newViewType==null ){
+      return;
+    }
     setViewType(newViewType);
   };
 

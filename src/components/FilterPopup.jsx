@@ -162,7 +162,7 @@ export default function FilterPopup({ isOpen, onClose, onFilter, filterData }) {
 
                 <Stack direction="row" justifyContent="center"spacing={2}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="Due Data" value={taskDate} onChange={(value) => { setTaskDate(value) }} />
+                        <DatePicker label="Due Date" value={taskDate} minDate={dayjs(new Date())} onChange={(value) => { setTaskDate(value) }} />
                     </LocalizationProvider>
                     <Checkbox
                         checked={isDateChecked}
