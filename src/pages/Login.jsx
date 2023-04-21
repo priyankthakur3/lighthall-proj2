@@ -30,10 +30,10 @@ export default function Login() {
     setPassword(event.target.value);
   }
 
-  const login = (event) => {
+  const login = async (event) => {
     event.preventDefault();
 
-    backendCall.post('/login', {
+    await backendCall.post('/login', {
       username: username,
       password: password,
     }).then((res) => {
@@ -41,8 +41,8 @@ export default function Login() {
       window.localStorage.setItem('username', res.data.username);
       window.location = '/task';
     }).catch((err) => {
-      if (err.response && err.response.data && err.response.data.errorMessage) {
-        setErrorMessage(err.response.data.errorMessage);
+      if (err.response && err.response.data && err.response.data.error) {
+        setErrorMessage(err.response.data.error);
         setIsSnackbarOpen(true);
       }
     });

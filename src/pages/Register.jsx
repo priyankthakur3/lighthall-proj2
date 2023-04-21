@@ -35,7 +35,7 @@ export default function Login() {
     setConfirmPassword(event.target.value);
   }
 
-  const register = () => {
+  const register = async () => {
 
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match');
@@ -43,13 +43,13 @@ export default function Login() {
       return;
     }
 
-    backendCall.post('/register', {
+   await backendCall.post('/register', {
       username: username,
       password: password,
     }).then((res) => {
       setIsSucSnackbarOpen(true);
     }).catch((err) => {
-      setErrorMessage(err.response.data.errorMessage);
+      setErrorMessage(err.response.data.error);
       setIsErrSnackbarOpen(true);
     });
 
