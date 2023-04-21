@@ -1,4 +1,4 @@
-import React, { useState,useContext,useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Link } from '@mui/material';
 import '../styles/Layout.css';
 import Header from '../components/Header';
@@ -95,7 +95,7 @@ export default function Login() {
             variant="contained"
             color="primary"
             size="small"
-            disabled={username == '' && password == ''}
+            disabled={username === '' || password === ''}
             onClick={login}
           >
             Login

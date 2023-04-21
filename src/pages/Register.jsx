@@ -110,7 +110,7 @@ export default function Login() {
             variant="contained"
             color="primary"
             size="small"
-            disabled={username == '' && password == ''}
+            disabled={username === '' || password === ''}
             onClick={register}
           >
             Register
