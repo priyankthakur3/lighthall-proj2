@@ -157,6 +157,10 @@ export default function FilterPopup({ isOpen, onClose, onFilter, filterData }) {
                         onChange={e => {
                             setIsStatusChecked(e.target.checked);
                         }}
+
+
+
+                        
                     />
                 </Stack>
 
