@@ -33,9 +33,17 @@ body {
     gap: 30px;
 }
 
+.username-disp{
+    position: absolute;
+    right: 20px;
+    font-size: 20px;
+}
+
 /* List view */
 .list-container {
-    height: calc(100% - 170px );
+    height: calc(100% - 190px );
+    width: 95%;
+    margin: 20px 2.5%;
 }
 
 .post-list {
@@ -44,6 +52,7 @@ body {
 .list-header{
     background-color: #ffd402;
     font-weight: 500;
+    border: 1px solid #d5d5d5,
 }
 
 /* login page */

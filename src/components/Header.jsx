@@ -14,7 +14,7 @@ export default function Header() {
             color : "#fbe608"
         }}/> */}
         <Typography sx={{
-            fontSize : "20px",
+            fontSize : "25px",
             fontWeight : "bold"
         }}>Task Tracker</Typography>
       </Box>

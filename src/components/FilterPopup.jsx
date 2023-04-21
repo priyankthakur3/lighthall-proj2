@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, Checkbox, Stack, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -12,15 +12,23 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function FilterPopup({ isOpen, onClose, onFilter, filterData}) {
+export default function FilterPopup({ isOpen, onClose, onFilter, filterData }) {
 
-    const [taskStatus, setTaskStatus] = useState('todo');
+    const [isStatusChecked, setIsStatusChecked] = useState(false);
+    const [taskStatus, setTaskStatus] = useState('');
+
+    const [isTitleChecked, setIsTitleChecked] = useState(false);
     const [taskTitle, setTaskTitle] = useState('');
+
+    const [isDescChecked, setIsDescChecked] = useState(false);
     const [taskDescription, setTaskDescription] = useState('');
-    const [taskDate, setTaskDate] = useState(dayjs(new Date()));
+
+    const [isDateChecked, setIsDateChecked] = useState(false);
+    const [taskDate, setTaskDate] = useState(null);
+
+
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
     const [errorMesage, setErrorMessage] = useState('');
-    const [taskId, setTaskId] = useState('');
 
 
     const handleClose = () => {
@@ -35,88 +43,140 @@ export default function FilterPopup({ isOpen, onClose, onFilter, filterData}) {
         setTaskStatus(event.target.value);
     };
 
-    const handleCreate = () => {
-        if (taskTitle === '' || taskDescription === '') {
-            setErrorMessage('some fields are empty');
-            setIsSnackbarOpen(true);
-            return;
+    const handleFilter = () => {
+        let date = null;
+        if( taskDate!=null ){
+            date = taskDate.unix()+'';
         }
-        onCreate({
-            taskTitle : taskTitle,
-            taskDesc : taskDescription,
-            taskStatus : taskStatus,
-            taskDue : taskDate.unix()+''
+        onFilter({
+            title: {
+                isChecked : isTitleChecked,
+                value : taskTitle
+            },
+            description: {
+                isChecked : isDescChecked,
+                value : taskDescription
+            },
+            date: {
+                isChecked : isDateChecked,
+                value : date
+            },
+            status: {
+                isChecked : isStatusChecked,
+                value : taskStatus
+            }
         });
     }
 
-    const handleUpdate = () => {
-        if (taskTitle === '' || taskDescription === '') {
-            setErrorMessage('some fields are empty');
-            setIsSnackbarOpen(true);
-            return;
+    useEffect(() => {
+        if (filterData != null) {
+            if( filterData.title ){
+                let data = filterData.title;
+                setTaskTitle(data.value);    
+                setIsTitleChecked(data.isChecked);    
+            }
+            if( filterData.description ){
+                let data = filterData.description;
+                setTaskDescription(data.value);    
+                setIsDescChecked(data.isChecked);    
+            }
+            if( filterData.status ){
+                let data = filterData.status;
+                setTaskStatus(data.value);    
+                setIsStatusChecked(data.isChecked);    
+            }
+            if( filterData.date ){
+                let data = filterData.date;
+                if( data.value!=null ){
+                    setTaskDate(dayjs(new Date(+data.value*1000)));    
+                }else{
+                    setTaskDate(null);
+                }
+                setIsDateChecked(data.isChecked);    
+            }
         }
-        onUpdate({
-            taskID : taskId,
-            taskTitle : taskTitle,
-            taskDesc : taskDescription,
-            taskStatus : taskStatus,
-            taskDue : taskDate.unix()+''
-        });
-    }
-
-    useEffect(()=>{
-        if( popupType==='update' && taskData!=null ){
-            setTaskDate(dayjs(new Date(+taskData.taskDue*1000)));
-            setTaskDescription(taskData.taskDesc);
-            setTaskStatus(taskData.taskStatus);
-            setTaskTitle(taskData.taskTitle);
-            setTaskId(taskData.id);
-        }
-    },[taskData,isOpen]);
+    }, [filterData, isOpen]);
 
 
     return (
         <Dialog open={isOpen} onClose={handleClose}>
             <DialogTitle>Filter</DialogTitle>
             <DialogContent className="task-popup-container">
-                
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="title"
-                    label="Title"
-                    value={taskTitle}
-                    onChange={(e) => { setTaskTitle(e.target.value) }}
-                />
-                <TextField
-                    label="Description"
-                    multiline
-                    value={taskDescription}
-                    onChange={(e) => { setTaskDescription(e.target.value) }}
-                />
-                <FormControl>
-                    <InputLabel id="demo-simple-select-label">Task status</InputLabel>
-                    <Select
-                        value={taskStatus}
-                        label="Task Status"
-                        onChange={handleStatusChange}
-                    >
-                        <MenuItem value='todo'>To Do</MenuItem>
-                        <MenuItem value='progress'>In Progress</MenuItem>
-                        <MenuItem value='waitlist'>Waitlist</MenuItem>
-                        <MenuItem value='completed'>Completed</MenuItem>
-                    </Select>
-                </FormControl>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker label="Due Data" value={taskDate} onChange={(value) => { setTaskDate(value) }} />
-                </LocalizationProvider>
+
+                <Stack direction="row" justifyContent="center" spacing={2}>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="title"
+                        label="Title"
+                        value={taskTitle}
+                        onChange={(e) => { setTaskTitle(e.target.value) }}
+                    />
+                    <Checkbox
+                        checked={isTitleChecked}
+                        onChange={e => {
+                            setIsTitleChecked(e.target.checked);
+                        }}
+                    />
+                </Stack>
+
+                <Stack direction="row" justifyContent="center" spacing={2}>
+                    <TextField
+                        label="Description"
+                        multiline
+                        value={taskDescription}
+                        onChange={(e) => { setTaskDescription(e.target.value) }}
+                    />
+                    <Checkbox
+                        checked={isDescChecked}
+                        onChange={e => {
+                            setIsDescChecked(e.target.checked);
+                        }}
+                    />
+                </Stack>
+
+                <Stack direction="row" justifyContent="center" spacing={2}>
+                    <FormControl>
+                        <InputLabel id="demo-simple-select-label">Task status</InputLabel>
+                        <Select
+                            value={taskStatus}
+                            label="Task Status"
+                            onChange={handleStatusChange}
+                            sx={{
+                                width : "200px"
+                            }}
+                        >
+                            <MenuItem value='todo'>To Do</MenuItem>
+                            <MenuItem value='progress'>In Progress</MenuItem>
+                            <MenuItem value='waitlist'>Waitlist</MenuItem>
+                            <MenuItem value='completed'>Completed</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Checkbox
+                        checked={isStatusChecked}
+                        onChange={e => {
+                            setIsStatusChecked(e.target.checked);
+                        }}
+                    />
+                </Stack>
+
+                <Stack direction="row" justifyContent="center"spacing={2}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker label="Due Data" value={taskDate} onChange={(value) => { setTaskDate(value) }} />
+                    </LocalizationProvider>
+                    <Checkbox
+                        checked={isDateChecked}
+                        onChange={e => {
+                            setIsDateChecked(e.target.checked);
+                        }}
+                    />
+                </Stack>
 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                {popupType=='create' && <Button onClick={handleCreate}>Create</Button>}
-                {popupType=='update' && <Button onClick={handleUpdate}>Update</Button>}
-                
+                <Button onClick={handleFilter}>Filter</Button>
+
             </DialogActions>
             <Snackbar open={isSnackbarOpen} autoHideDuration={4000} onClose={hanldeSnackbarClose}>
                 <Alert severity="error" onClose={hanldeSnackbarClose}>{errorMesage}</Alert>

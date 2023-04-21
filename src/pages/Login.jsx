@@ -32,13 +32,13 @@ export default function Login() {
 
   const login = (event) => {
     event.preventDefault();
-    // let pwd = bcrypt.hashSync(password, salt);
 
     backendCall.post('/login', {
       username: username,
       password: password,
     }).then((res) => {
       window.localStorage.setItem('token', res.data.token);
+      window.localStorage.setItem('username', res.data.username);
       window.location = '/task';
     }).catch((err) => {
       if (err.response && err.response.data && err.response.data.errorMessage) {
@@ -52,12 +52,12 @@ export default function Login() {
     setIsSnackbarOpen(false)
   }
 
-  useEffect(()=>{
-    let userToken = localStorage.getItem('token');
-    if( userToken!=null && userToken!='' ){
-      window.location = '/task';
-    }
-  },[])
+  // useEffect(()=>{
+  //   let userToken = localStorage.getItem('token');
+  //   if( userToken!=null && userToken!='' ){
+  //     window.location = '/task';
+  //   }
+  // },[])
 
   return (
     <>

@@ -37,7 +37,6 @@ export default function Login() {
 
   const register = () => {
 
-
     if (password !== confirmPassword) {
       setErrorMessage('Passwords do not match');
       setIsErrSnackbarOpen(true);
